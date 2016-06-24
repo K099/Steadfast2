@@ -1506,7 +1506,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 						$diff = ($this->speed->y - $expectedVelocity) ** 2;
 
 						if(!$this->hasEffect(Effect::JUMP) and $diff > 0.6 and $expectedVelocity < $this->speed->y and !$this->server->getAllowFlight()){
-							$this->setMotion($this->temporalVector->setComponents(0, $expectedVelocity, 0));
+							$this->setMotion(new Vector3(0, $expectedVelocity, 0));
 						}
 					}
 
