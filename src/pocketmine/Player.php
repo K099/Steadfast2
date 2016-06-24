@@ -1922,8 +1922,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 				$pk->difficulty = $this->server->getDifficulty();
 				$this->dataPacket($pk);
 
-				$this->server->getLogger()->info(TextFormat::AQUA . $this->username . TextFormat::WHITE . "/" . TextFormat::AQUA . $this->ip . " connected");
-
 				if($this->gamemode === Player::SPECTATOR){
 					$pk = new ContainerSetContentPacket();
 					$pk->windowid = ContainerSetContentPacket::SPECIAL_CREATIVE;
@@ -3146,7 +3144,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 
 			$this->server->getPluginManager()->unsubscribeFromPermission(Server::BROADCAST_CHANNEL_USERS, $this);
 			$this->spawned = false;
-			$this->server->getLogger()->info(TextFormat::AQUA . $this->username . TextFormat::WHITE . "/" . $this->ip . " logged out due to " . str_replace(["\n", "\r"], [" ", ""], $reason));
 			$this->windows = new \SplObjectStorage();
 			$this->windowIndex = [];
 			$this->usedChunks = [];
