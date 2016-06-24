@@ -3036,11 +3036,11 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 	 * @return bool
 	 */
 	public function kick($reason = "Disconnected from server."){
-		$this->server->getPluginManager()->callEvent($ev = new PlayerKickEvent($this, $reason, TextFormat::YELLOW . $this->username . " has left the game"));
+		$this->server->getPluginManager()->callEvent($ev = new PlayerKickEvent($this, $reason));
 		if(!$ev->isCancelled()){
 			$message = $reason;
 			$this->sendMessage($message);
-			$this->close($ev->getQuitMessage(), $message);
+			$this->close("", $message);
 
 			return true;
 		}
