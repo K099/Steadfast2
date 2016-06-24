@@ -19,19 +19,19 @@ messages:
 main:
  #Block unknown items from creative-mode players
  filter-creative-items: true
- 
+
  #Shuffle the player list to prevent players from 'gaming' the server, getting high priority on the tick list.
  #Value is in ticks, so 20 = shuffle each second
  player-shuffle: 0
 
  #Checks movement of players in survival mode and reverts them if not valid
  #Creative mode is not affected
- check-movement: true
+ check-movement: false
 
  #Do entity block collision checks. This includes damage by blocks, falling on water, climbing blocks
  #Value is in ticks, so 1 = check each tick. If 0, disable collision checks
- check-block-collision: 1
+ check-block-collision: 0
 
  #Enables RakLib client/server port checking
  #Proxied servers might have to disable this option
- session-port-checking: true
+ session-port-checking: false
