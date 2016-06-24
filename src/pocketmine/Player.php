@@ -3218,129 +3218,22 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 			return;
 		}
 
-		$message = $this->getName() . " died";
-
-		$cause = $this->getLastDamageCause();
-		$ev = null;
-		if($cause instanceof EntityDamageEvent){
-			$ev = $cause;
-			$cause = $ev->getCause();
-		}
-
-		switch($cause){
-			case EntityDamageEvent::CAUSE_ENTITY_ATTACK:
-				if($ev instanceof EntityDamageByEntityEvent){
-					$e = $ev->getDamager();
-					if($e instanceof Player){
-						$message = $this->getName() . " was killed by " . $e->getName();
-						break;
-					}elseif($e instanceof Living){
-						$message = $this->getName() . " was slain by " . $e->getName();
-						break;
-					}
-				}
-				$message = $this->getName() . " was killed";
-				break;
-			case EntityDamageEvent::CAUSE_PROJECTILE:
-				if($ev instanceof EntityDamageByEntityEvent){
-					$e = $ev->getDamager();
-					if($e instanceof Living){
-						$message = $this->getName() . " was shot by " . $e->getName();
-						break;
-					}
-				}
-				$message = $this->getName() . " was shot by arrow";
-				break;
-			case EntityDamageEvent::CAUSE_SUICIDE:
-				$message = $this->getName() . " died";
-				break;
-			case EntityDamageEvent::CAUSE_VOID:
-				$message = $this->getName() . " fell out of the world";
-				break;
-			case EntityDamageEvent::CAUSE_FALL:
-				if($ev instanceof EntityDamageEvent){
-					if($ev->getFinalDamage() > 2){
-						$message = $this->getName() . " fell from a high place";
-						break;
-					}
-				}
-				$message = $this->getName() . " hit the ground too hard";
-				break;
-
-			case EntityDamageEvent::CAUSE_SUFFOCATION:
-				$message = $this->getName() . " suffocated in a wall";
-				break;
-
-			case EntityDamageEvent::CAUSE_LAVA:
-				$message = $this->getName() . " tried to swim in lava";
-				break;
-
-			case EntityDamageEvent::CAUSE_FIRE:
-				$message = $this->getName() . " went up in flames";
-				break;
-
-			case EntityDamageEvent::CAUSE_FIRE_TICK:
-				$message = $this->getName() . " burned to death";
-				break;
-
-			case EntityDamageEvent::CAUSE_DROWNING:
-				$message = $this->getName() . " drowned";
-				break;
-
-			case EntityDamageEvent::CAUSE_CONTACT:
-				$message = $this->getName() . " was pricked to death";
-				break;
-
-			case EntityDamageEvent::CAUSE_BLOCK_EXPLOSION:
-			case EntityDamageEvent::CAUSE_ENTITY_EXPLOSION:
-				$message = $this->getName() . " blew up";
-				break;
-
-			case EntityDamageEvent::CAUSE_MAGIC:
-				$message = $this->getName() . " was slain by magic";
-				break;
-
-			case EntityDamageEvent::CAUSE_CUSTOM:
-				break;
-
-			default:
-
-		}
-
 		if($this->dead){
 			return;
 		}
 
 		Entity::kill();
 
-		$this->server->getPluginManager()->callEvent($ev = new PlayerDeathEvent($this, $this->getDrops(), $message));
-		
+		$this->server->getPluginManager()->callEvent($ev = new PlayerDeathEvent($this, $this->getDrops()));
+
 		$this->freeChunks();
-		
-		if(!$ev->getKeepInventory()){
-			foreach($ev->getDrops() as $item){
-				$this->level->dropItem($this, $item);
-			}
-
-			if($this->inventory !== null){
-				$this->inventory->clearAll();
-			}
-		}
-
-		if($ev->getDeathMessage() != ""){
-			$this->server->broadcast($ev->getDeathMessage(), Server::BROADCAST_CHANNEL_USERS);
-		}
-
-		if($this->server->isHardcore()){
-			$this->setBanned(true);
-		}else{
-			$pk = new RespawnPacket();
-			$pos = $this->getSpawn();
-			$pk->x = $pos->x;
-			$pk->y = $pos->y;
-			$pk->z = $pos->z;
-			$this->dataPacket($pk);
-		}
+		$this->inventory->clearAll();
+		$pk = new RespawnPacket();
+		$pos = $this->getSpawn();
+		$pk->x = $pos->x;
+		$pk->y = $pos->y;
+		$pk->z = $pos->z;
+		$this->dataPacket($pk);
 	}
 
 	public function setHealth($amount){
