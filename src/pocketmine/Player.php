@@ -3105,7 +3105,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 
 			$this->connected = false;
 			if($this->username != ""){
-				$this->server->getPluginManager()->callEvent($ev = new PlayerQuitEvent($this, $message, $reason));
+				$this->server->getPluginManager()->callEvent($ev = new PlayerQuitEvent($this, $reason));
 				if($this->server->getAutoSave() and $this->loggedIn === true){
 					$this->save();
 				}
@@ -3137,10 +3137,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 			if($this->loggedIn) $this->server->removeOnlinePlayer($this);
 
 			$this->loggedIn = false;
-
-			if(isset($ev) and $this->username != "" and $this->spawned !== false and $ev->getQuitMessage() != ""){
-				$this->server->broadcastMessage($ev->getQuitMessage());
-			}
 
 			$this->server->getPluginManager()->unsubscribeFromPermission(Server::BROADCAST_CHANNEL_USERS, $this);
 			$this->spawned = false;
