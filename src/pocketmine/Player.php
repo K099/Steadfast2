@@ -768,7 +768,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 				$this->dataPacket($pk);
 			}
 
-			$this->server->getPluginManager()->callEvent($ev = new PlayerJoinEvent($this, ""));
+			$this->server->getPluginManager()->callEvent($ev = new PlayerJoinEvent($this));
 		}
 	}
 
