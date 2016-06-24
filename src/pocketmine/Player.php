@@ -3285,15 +3285,9 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 		}
 		
 		if($this->getFood()-$amount <= 6 && !($this->getFood() <= 6)) {
-//			$this->setDataProperty(self::DATA_FLAG_SPRINTING, self::DATA_TYPE_BYTE, false);
-			$this->removeEffect(Effect::SLOWNESS);
+			$this->setDataProperty(self::DATA_FLAG_SPRINTING, self::DATA_TYPE_BYTE, false);
 		} elseif($this->getFood()-$amount < 6 && !($this->getFood() > 6)) {
-//			$this->setDataProperty(self::DATA_FLAG_SPRINTING, self::DATA_TYPE_BYTE, true);
-			$effect = Effect::getEffect(Effect::SLOWNESS);
-			$effect->setDuration(0x7fffffff);
-			$effect->setAmplifier(2);
-			$effect->setVisible(false);
-			$this->addEffect($effect);
+			$this->setDataProperty(self::DATA_FLAG_SPRINTING, self::DATA_TYPE_BYTE, true);
 		}
 		if($this->hunger - $amount < 0) return;
 		$this->setFood($this->getFood() - $amount);
