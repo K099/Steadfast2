@@ -3,6 +3,8 @@
 # Some of these settings are safe, others can break your server if modified incorrectly
 
 settings:
+ #Name of server
+ server-name: "§6Orange§aCraft §fNetwork"
  shutdown-message: "Server restart"
  #Allow listing plugins via Query
  query-plugins: true
