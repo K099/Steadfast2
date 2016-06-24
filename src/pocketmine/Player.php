@@ -1769,11 +1769,11 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 				}
 
 				if(!$this->server->isWhitelisted(strtolower($this->getName()))){
-					$this->close(TextFormat::YELLOW . $this->username . " has left the game", "Server is private.");
+					$this->close("", "Server is private.");
 					//Timings::$timerLoginPacket->stopTiming();
 					return;
 				}elseif($this->server->getNameBans()->isBanned(strtolower($this->getName())) or $this->server->getIPBans()->isBanned($this->getAddress())){
-					$this->close(TextFormat::YELLOW . $this->username . " has left the game", "You have been banned.");
+					$this->close("", "You have been banned.");
 					//Timings::$timerLoginPacket->stopTiming();
 					return;
 				}
@@ -1788,7 +1788,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 				foreach($this->server->getOnlinePlayers() as $p){
 					if($p !== $this and strtolower($p->getName()) === strtolower($this->getName())){
 						if($p->kick("You connected from somewhere else.") === false){
-							$this->close(TextFormat::YELLOW . $this->getName() . " has left the game", "You connected from somewhere else.");
+							$this->close("", "You connected from somewhere else.");
 							//Timings::$timerLoginPacket->stopTiming();
 							return;
 						}else{
@@ -1824,7 +1824,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 				}
 
 				if(!($nbt instanceof Compound)){
-					$this->close(TextFormat::YELLOW . $this->username . " has left the game", "Corrupt joining data, check your connection.");
+					$this->close("", "Corrupt joining data, check your connection.");
 					//Timings::$timerLoginPacket->stopTiming();
 					return;
 				}
@@ -1862,7 +1862,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 
 				$this->server->getPluginManager()->callEvent($ev = new PlayerLoginEvent($this, "Plugin reason"));
 				if($ev->isCancelled()){
-					$this->close(TextFormat::YELLOW . $this->username . " has left the game", $ev->getKickMessage());
+					$this->close("", $ev->getKickMessage());
 					//Timings::$timerLoginPacket->stopTiming();
 					return;
 				}
@@ -2122,7 +2122,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 						break;
 					}
 
-					if($item->getId() === Item::SNOWBALL){
+					/*if($item->getId() === Item::SNOWBALL){
 						$nbt = new Compound("", [
 							"Pos" => new Enum("Pos", [
 								new DoubleTag("", $this->x),
@@ -2158,7 +2158,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 						}else{
 							$snowball->spawnToAll();
 						}
-					}
+					}*/
 
 					$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ACTION, true);
 					$this->startAction = $this->server->getTick();
@@ -2198,7 +2198,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 						break;
 					case PlayerActionPacket::ACTION_RELEASE_ITEM:
 						if($this->startAction > -1 and $this->getDataFlag(self::DATA_FLAGS, self::DATA_FLAG_ACTION)){
-							if($this->inventory->getItemInHand()->getId() === Item::BOW) {
+							/*if($this->inventory->getItemInHand()->getId() === Item::BOW) {
 								$bow = $this->inventory->getItemInHand();
 								if ($this->isSurvival() and !$this->inventory->contains(Item::get(Item::ARROW, 0, 1))) {
 									$this->inventory->sendContents($this);
@@ -2261,7 +2261,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 										$ev->getProjectile()->spawnToAll();
 									}
 								}
-							}
+							}*/
 						}elseif($this->inventory->getItemInHand()->getId() === Item::BUCKET and $this->inventory->getItemInHand()->getDamage() === 1){ //Milk!
 							$this->server->getPluginManager()->callEvent($ev = new PlayerItemConsumeEvent($this, $this->inventory->getItemInHand()));
 							if($ev->isCancelled()){
