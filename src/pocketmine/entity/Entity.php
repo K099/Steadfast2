@@ -983,7 +983,7 @@ abstract class Entity extends Location implements Metadatable{
 		$this->fallDistance = 0;
 	}
 
-	protected function updateFallState($distanceThisTick, $onGround){
+	/*protected function updateFallState($distanceThisTick, $onGround){
 		if($onGround === true){
 			if($this->fallDistance > 0){
 				if($this instanceof Living){
@@ -998,19 +998,19 @@ abstract class Entity extends Location implements Metadatable{
 		}elseif($distanceThisTick < 0){
 			$this->fallDistance -= $distanceThisTick;
 		}
-	}
+	}*/
 
 	public function getBoundingBox(){
 		return $this->boundingBox;
 	}
 
-	public function fall($fallDistance){
+	/*public function fall($fallDistance){
 		$damage = floor($fallDistance - 3);
 		if($damage > 0){
 			$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_FALL, $damage);
 			$this->attack($ev->getFinalDamage(), $ev);
 		}
-	}
+	}*/
 
 	public function handleLavaMovement(){ //TODO
 
@@ -1070,73 +1070,23 @@ abstract class Entity extends Location implements Metadatable{
 	}
 
 	public function isInsideOfWater() {
-		$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = ($this->y + $this->getEyeHeight())), Math::floorFloat($this->z)));
 
-		if($block instanceof Water) {
-			$f = ($block->y + 1) - ($block->getFluidHeightPercent() - 0.1111111);
-			return $y < $f;
-		}
-
-		return false;
 	}
 
 	public function isCollideWithWater() {
-		// checking block under feet
-		$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = $this->y), Math::floorFloat($this->z)));
-		if(!($block instanceof Water)) {
-			$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = ($this->y + $this->getEyeHeight())), Math::floorFloat($this->z)));
-		}
-		if($block instanceof Water) {
-			$f = ($block->y + 1) - ($block->getFluidHeightPercent() - 0.1111111);
-			return $y < $f;
-		}
-		return false;
+
 	}
 	
 	public function isCollideWithLiquid() {
-		$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = $this->y), Math::floorFloat($this->z)));
-		if(!($block instanceof Liquid)) {
-			$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = ($this->y + $this->getEyeHeight())), Math::floorFloat($this->z)));
-		}
-				if(!($block instanceof Liquid)) {
-			$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x + $this->width), Math::floorFloat($y), Math::floorFloat($this->z)));
-		}
-				if(!($block instanceof Liquid)) {
-			$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x - $this->width), Math::floorFloat($y), Math::floorFloat($this->z)));
-		}
-				if(!($block instanceof Liquid)) {
-			$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y), Math::floorFloat($this->z + $this->width)));
-		}
-				if(!($block instanceof Liquid)) {
-			$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y), Math::floorFloat($this->z - $this->width)));
-		}
-		if($block instanceof Liquid) {
-			$f = ($block->y + 1) - ($block->getFluidHeightPercent() - 0.1111111);
-			return $y < $f ? $block : false;
-		}
-		return false;
+
 	}
 	
 	public function isCollideWithTransparent() {
-		$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = $this->y), Math::floorFloat($this->z)));
-		if(!($block instanceof \pocketmine\block\Ladder) && !($block instanceof \pocketmine\block\Fire)) {
-			$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = ($this->y + $this->getEyeHeight())), Math::floorFloat($this->z)));
-		}
-		if($block instanceof \pocketmine\block\Ladder || $block instanceof \pocketmine\block\Fire) {			
-			return $block;
-		}
-		return false;
+
 	}
 
 	public function isInsideOfSolid(){
-		$block = $this->level->getBlock(new Vector3(Math::floorFloat($this->x), Math::floorFloat($y = ($this->y + $this->getEyeHeight())), Math::floorFloat($this->z)));
 
-		$bb = $block->getBoundingBox();
-
-		if($bb !== null and $block->isSolid() and !$block->isTransparent() and $bb->intersectsWith($this->getBoundingBox())){
-			return true;
-		}
-		return false;
 	}
 
 	public function fastMove($dx, $dy, $dz){
@@ -1173,8 +1123,8 @@ abstract class Entity extends Location implements Metadatable{
 		}
 		$this->isCollided = $this->onGround;
 
-		$notInAir = $this->onGround || $this->isCollideWithWater();
-		$this->updateFallState($dy, $notInAir);
+//		$notInAir = $this->onGround || $this->isCollideWithWater();
+//		$this->updateFallState($dy, $notInAir);
 
 
 		//Timings::$entityMoveTimer->stopTiming();
@@ -1393,8 +1343,8 @@ abstract class Entity extends Location implements Metadatable{
 					$this->isCollided = ($this->isCollidedHorizontally or $this->isCollidedVertically);
 					$this->onGround = ($movY != $dy and $movY < 0);
 				}
-				$notInAir = $this->onGround || $this->isCollideWithWater();
-				$this->updateFallState($dy, $notInAir);
+//				$notInAir = $this->onGround || $this->isCollideWithWater();
+//				$this->updateFallState($dy, $notInAir);
 
 				if($movX != $dx){
 					$this->motionX = 0;
