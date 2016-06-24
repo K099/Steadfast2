@@ -1370,50 +1370,17 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 			$this->lastPitch = $to->pitch;
 
 			if(!$isFirst){
-				$needEvent = true;
-				if(!$this->isSpectator()) {					
-					$block = $from->level->getBlock(new Vector3(floor($to->getX()), ceil($to->getY()), floor($to->getZ())));
-					$blockUp = $from->level->getBlock(new Vector3(floor($to->getX()), ceil($to->getY()) + 1, floor($to->getZ())));
-					$roundBlock = $from->level->getBlock(new Vector3(floor($to->getX()), round($to->getY()), floor($to->getZ())));
-					if($from->getY() - $to->getY() > 0.1){
-						if(!$roundBlock->isTransparent()){
-							$needEvent = false;
-						}
+				$ev = new PlayerMoveEvent($this, $from, $to);
+				$this->setMoving(true);
+
+				$this->server->getPluginManager()->callEvent($ev);
+
+				if(!($revert = $ev->isCancelled())){ //Yes, this is intended
+					if($to->distanceSquared($ev->getTo()) > 0.01){ //If plugins modify the destination
+						$this->teleport($ev->getTo());						
 					}else{
-						if(!$block->isTransparent() || !$blockUp->isTransparent()){
-							$blockUpUp = $from->level->getBlock(new Vector3(floor($to->getX()), ceil($to->getY()) + 2, floor($to->getZ())));
-							if(!$blockUp->isTransparent()){
-								$blockLow = $from->level->getBlock(new Vector3(floor($to->getX()), ceil($to->getY()) - 1, floor($to->getZ())));
-								if($from->getY() == $to->getY() && !$blockLow->isTransparent()){
-									$needEvent = false;
-								}
-							}else{
-								if(!$blockUpUp->isTransparent()){
-									$needEvent = false;
-								}
-								$blockFrom = $from->level->getBlock(new Vector3($from->getX(), $from->getY(), $from->getZ()));
-								if($blockFrom instanceof Liquid){
-									$needEvent = false;
-								}
-							}
-						}
+						$this->level->addEntityMovement($this->getViewers(), $this->getId(), $this->x, $this->y + $this->getEyeHeight(), $this->z, $this->yaw, $this->pitch, $this->yaw);
 					}
-				}
-				if($needEvent){
-					$ev = new PlayerMoveEvent($this, $from, $to);
-					$this->setMoving(true);
-
-					$this->server->getPluginManager()->callEvent($ev);
-
-					if(!($revert = $ev->isCancelled())){ //Yes, this is intended
-						if($to->distanceSquared($ev->getTo()) > 0.01){ //If plugins modify the destination
-							$this->teleport($ev->getTo());						
-						}else{
-							$this->level->addEntityMovement($this->getViewers(), $this->getId(), $this->x, $this->y + $this->getEyeHeight(), $this->z, $this->yaw, $this->pitch, $this->yaw);
-						}
-					}
-				}else{
-					$revert = true;
 				}
 			}
 
@@ -1539,12 +1506,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 						$diff = ($this->speed->y - $expectedVelocity) ** 2;
 
 						if(!$this->hasEffect(Effect::JUMP) and $diff > 0.6 and $expectedVelocity < $this->speed->y and !$this->server->getAllowFlight()){
-							if($this->inAirTicks < 301){
-//								$this->setMotion(new Vector3(0, $expectedVelocity, 0));
-							}elseif($this->kick("Flying is not enabled on this server")){
-								$this->timings->stopTiming();
-								return false;
-							}
+							$this->setMotion(new Vector3(0, $expectedVelocity, 0));
 						}
 					}
 
