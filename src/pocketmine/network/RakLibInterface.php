@@ -68,6 +68,7 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		$this->maxcount = $maxcount;
 
 		$this->interface->sendOption("name",
+		"MCPE;".addcslashes($this->server->getProperty("settings.server-name", "§6Orange§aCraft §fNetwork"), ";") .";".
 		(Info::CURRENT_PROTOCOL).";".
 		\pocketmine\MINECRAFT_VERSION_NETWORK.";".
 		$this->count.";".$maxcount
