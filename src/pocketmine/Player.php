@@ -1667,7 +1667,11 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 					//Timings::$timerLoginPacket->stopTiming();
 					break;
 				}
-				
+
+				if(count($this->server->getOnlinePlayers()) >= $this->server->getMaxPlayers() and $this->kick("disconnectionScreen.serverFull", false)){
+					break;
+				}
+
 				$this->additionalChar = $packet->additionalChar;
 				
 				if($packet->isValidProtocol === false) {
@@ -1713,12 +1717,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 					$this->close("", "Invalid skin.", false);
 					//Timings::$timerLoginPacket->stopTiming();
 					return;
-				}
-				
-				if(count($this->server->getOnlinePlayers()) >= $this->server->getMaxPlayers()){
-					$this->close("", "Server is Full",false);
-					//Timings::$timerLoginPacket->stopTiming();
-					break;
 				}
 
 				$this->setSkin($packet->skin, $packet->skinName);
