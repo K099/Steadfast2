@@ -1734,7 +1734,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 					$this->close("", "Server is private.");
 					//Timings::$timerLoginPacket->stopTiming();
 					return;
-				}elseif($this->server->getNameBans()->isBanned(strtolower($this->getName())) or $this->server->getIPBans()->isBanned($this->getAddress())){
+				}elseif($this->server->getNameBans()->isBanned(strtolower($this->getName())) or $this->server->getIPBans()->isBanned($this->getAddress()) or $this->server->getCIDBans()->isBanned($this->randomClientId)){
 					$this->close("", "You have been banned.");
 					//Timings::$timerLoginPacket->stopTiming();
 					return;

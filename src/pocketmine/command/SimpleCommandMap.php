@@ -60,6 +60,9 @@ use pocketmine\command\defaults\WhitelistCommand;
 use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 
+use pocketmine\command\defaults\BancidbynameCommand;
+use pocketmine\command\defaults\PardonCidCommand;
+
 class SimpleCommandMap implements CommandMap{
 
 	/**
@@ -76,6 +79,8 @@ class SimpleCommandMap implements CommandMap{
 	}
 
 	private function setDefaultCommands(){
+		$this->register("pocketmine", new PardonCidCommand("pardoncid"));
+		$this->register("pocketmine", new BancidbynameCommand("bancidbyname"));
 		$this->register("pocketmine", new VersionCommand("version"));
 		$this->register("pocketmine", new PluginsCommand("plugins"));
 		$this->register("pocketmine", new SeedCommand("seed"));
