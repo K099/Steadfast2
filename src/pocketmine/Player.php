@@ -2620,7 +2620,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 							}else{
 								$this->server->getPluginManager()->callEvent($ev = new PlayerChatEvent($this, $ev->getMessage()));
 								if(!$ev->isCancelled()){
-									$this->server->broadcastMessage($ev->getPlayer()->getDisplayName() . ": " . $ev->getMessage(), $ev->getRecipients());
+									foreach($this->getServer()->getOnlinePlayers() as $player) $player->sendMessage($ev->getFormat(),[$ev->getPlayer()->getDisplayName(),$ev->getMessage()],$ev->getRecipients());
 								}
 							}
 							$ev = new PlayerCommandPostprocessEvent($this, $message);
