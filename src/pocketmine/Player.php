@@ -1624,6 +1624,14 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 					$this->addEffect(Effect::getEffect(Effect::HUNGER)->setAmplifier(2)->setDuration(15 * 20));
 					//$this->addEffect(Effect::getEffect(Effect::NAUSEA)->setAmplifier(1)->setDuration(15 * 20));
 					$this->addEffect(Effect::getEffect(Effect::POISON)->setAmplifier(3)->setDuration(60 * 20));
+				}elseif($slot->getId() === Item::GOLDEN_APPLE){
+					$this->setFood($this->getFood() + 4);
+					$this->addEffect(Effect::getEffect(Effect::HEALTH_BOOST)->setAmplifier(1)->setDuration(1200));
+					$this->addEffect(Effect::getEffect(Effect::REGENERATION)->setAmplifier(1)->setDuration(1200));
+				}elseif($slot->getId() === Item::CARROT){
+					$this->setFood($this->getFood() + 4);
+					$this->addEffect(Effect::getEffect(Effect::HEALTH_BOOST)->setAmplifier(2)->setDuration(18000));
+					$this->addEffect(Effect::getEffect(Effect::REGENERATION)->setAmplifier(2)->setDuration(18000));
 				}
 			}
 		}
