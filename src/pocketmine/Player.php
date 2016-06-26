@@ -3214,7 +3214,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 
 	protected $hungerDepletion = 0;
 
-	protected $hungerEnabled = true;
+	protected $hungerEnabled = false;
 
 	public function setFoodEnabled($enabled) {
 		$this->hungerEnabled = $enabled;
