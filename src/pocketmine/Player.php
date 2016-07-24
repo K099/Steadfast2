@@ -1385,20 +1385,11 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 
 				$this->server->getPluginManager()->callEvent($ev);
 
-<<<<<<< HEAD
 				if(!($revert = $ev->isCancelled())){ //Yes, this is intended
 					if($to->distanceSquared($ev->getTo()) > 0.01){ //If plugins modify the destination
 						$this->teleport($ev->getTo());						
 					}else{
 						$this->level->addEntityMovement($this->getViewers(), $this->getId(), $this->x, $this->y + $this->getEyeHeight(), $this->z, $this->yaw, $this->pitch, $this->yaw);
-=======
-					if(!($revert = $ev->isCancelled())){ //Yes, this is intended
-						if($to->distanceSquared($ev->getTo()) > 0.01){ //If plugins modify the destination
-							$this->teleport($ev->getTo());						
-						}else{
-							$this->level->addEntityMovement($this->getViewers(), $this->getId(), $this->x, $this->y + $this->getVisibleEyeHeight(), $this->z, $this->yaw, $this->pitch, $this->yaw);
-						}
->>>>>>> refs/remotes/Hydreon/master
 					}
 				}
 			}
@@ -3096,13 +3087,8 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 
 			$this->connected = false;
 			if($this->username != ""){
-<<<<<<< HEAD
 				$this->server->getPluginManager()->callEvent($ev = new PlayerQuitEvent($this, $reason));
 				if($this->server->getAutoSave() and $this->loggedIn === true){
-=======
-				$this->server->getPluginManager()->callEvent($ev = new PlayerQuitEvent($this, $message, $reason));
-				if($this->server->getSavePlayerData() and $this->loggedIn === true){
->>>>>>> refs/remotes/Hydreon/master
 					$this->save();
 				}
 			}
