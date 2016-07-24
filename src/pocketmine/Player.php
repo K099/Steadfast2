@@ -717,7 +717,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 			}
 		}
 		
-		if($this->chunkLoadCount >= 36 and $this->spawned === false){
+		if($this->chunkLoadCount >= 1 and $this->spawned === false){
 			$this->spawned = true;
 
 			$this->sendSettings();
