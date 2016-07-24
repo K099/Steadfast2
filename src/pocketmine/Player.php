@@ -259,6 +259,9 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 	protected $identifier;
 	
 	protected $additionalChar;
+	
+	/**@var string*/
+	public $language = 'English';
 
 	public function getLeaveMessage(){
 		return "";
@@ -662,13 +665,20 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 	public function sendChunk($x, $z, $payload){
 		if($this->connected === false){
 			return;
+		}		
+		
+		$resIndex = $this->getAdditionalChar() == chr(0xfe) ? 'result15' : 'result';
+		if(isset($payload[$this->language])) {
+			$data = $payload[$this->language][$resIndex];
+		} else {
+			$data = $payload['English'][$resIndex];
 		}
 
 		$this->usedChunks[Level::chunkHash($x, $z)] = true;
 		$this->chunkLoadCount++;
 
 		$pk = new BatchPacket();
-		$pk->payload = $payload;
+		$pk->payload = $data;
 		$pk->encode();
 		$pk->isEncoded = true;
 		$this->dataPacket($pk);
@@ -1853,6 +1863,8 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 				
 				$spawnPosition = $this->getSpawn();
 				
+				$compassPosition = $this->server->getGlobalCompassPosition();
+				
 				$pk = new StartGamePacket();
 				$pk->seed = -1;
 				$pk->dimension = 0;
@@ -1863,9 +1875,9 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 //				$pk->spawnY = (int) $spawnPosition->y;
 //				$pk->spawnZ = (int) $spawnPosition->z;
 				/* hack for compass*/
-				$pk->spawnX = 15000;
-				$pk->spawnY = 10;
-				$pk->spawnZ = -1000000;
+				$pk->spawnX = $compassPosition['x'];
+				$pk->spawnY = $compassPosition['y'];
+				$pk->spawnZ = $compassPosition['z'];
 				$pk->generator = 1; //0 old, 1 infinite, 2 flat
 				$pk->gamemode = $this->gamemode & 0x01;
 				$pk->eid = 0;//$this->getId(); //Always use EntityID as zero for the actual player
@@ -2588,6 +2600,8 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 				$this->server->getPluginManager()->callEvent($ev);
 				if($ev->isCancelled()){
 					$this->inventory->sendSlot($slot, $this);
+					$this->inventory->setHotbarSlotIndex($slot, $slot);
+					$this->inventory->sendContents($this);
 					//Timings::$timerDropItemPacket->stopTiming();
 					break;
 				}
@@ -3470,6 +3484,10 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer{
 	
 	public function getAdditionalChar() {
 		return $this->additionalChar;
+	}
+	
+	public function getVisibleEyeHeight() {
+		return $this->eyeHeight;
 	}
 	
 }

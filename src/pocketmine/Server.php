@@ -213,6 +213,9 @@ class Server{
 	
 	/** @var bool */
 	private $autoGenerate;
+	
+	/** @var bool */
+	private $savePlayerData;
 
 	/** @var RCON */
 	private $rcon;
@@ -277,8 +280,15 @@ class Server{
 		
 
 	public $packetMaker = null;
-
 	
+	private $signTranslation = [];
+	
+	private $globalCompasPosition = array(
+		'x' => 15000,
+		'y' => 10,
+		'z' => -1000000
+	);
+
 	public function isUseAnimal() {
 		return $this->useAnimal;
 	}
@@ -376,7 +386,7 @@ class Server{
 	 * @return int
 	 */
 	public function getViewDistance(){
-		return 1;
+		return 32;
 	}
 
 	/**
@@ -422,6 +432,21 @@ class Server{
 	 */
 	public function setAutoGenerate($value){
 		$this->autoGenerate = (bool) $value;		
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function getSavePlayerData(){
+		return $this->savePlayerData;
+	}
+
+	
+	/**
+	 * @param bool $value
+	 */
+	public function setSavePlayerData($value) {
+		$this->savePlayerData = (bool) $value;		
 	}
 
 	/**
@@ -1452,7 +1477,8 @@ class Server{
 			"enable-rcon" => false,
 			"rcon.password" => substr(base64_encode(@Utils::getRandomBytes(20, false)), 3, 10),
 			"auto-save" => true,
-			"auto-generate" => false
+			"auto-generate" => false,
+			"save-player-data" => false
 		]);
 
 		ServerScheduler::$WORKERS = 4;
@@ -1485,6 +1511,7 @@ class Server{
 		$this->maxPlayers = $this->getConfigInt("max-players", 20);
 		$this->setAutoSave($this->getConfigBoolean("auto-save", true));
 		$this->setAutoGenerate($this->getConfigBoolean("auto-generate", false));
+		$this->setSavePlayerData($this->getConfigBoolean("save-player-data", false));
 		
 		$this->useAnimal = $this->getConfigBoolean("spawn-animals", false);
 		$this->animalLimit = $this->getConfigInt("animals-limit", 0);
@@ -1987,6 +2014,7 @@ class Server{
 	 * Starts the PocketMine-MP server and starts processing ticks and packets
 	 */
 	public function start(){
+		$this->loadSignTranslation();		
 		if($this->getConfigBoolean("enable-query", true) === true){
 			$this->queryHandler = new QueryHandler();
 		}
@@ -2486,4 +2514,47 @@ class Server{
 		$this->players = $random;
 	}
 	
+	private function loadSignTranslation() {
+		$languages = ['en' => 'English', 'de' => 'German', 'es' => 'Spanish'];
+		$signTranslation = [];
+		foreach ($languages as $langKey => $language) {
+			$path = 'worlds/world/signData/' . $langKey . '.json';
+			if (!file_exists($path)) {
+					continue;
+				}
+			$data = json_decode(file_get_contents($path), true);
+			if ($data) {
+				$signTranslation[$language] = $data;
+			}
+		}
+		$translation = [];
+		foreach ($signTranslation as $lang => $data) {
+			$translation[$lang] = [];
+			foreach ($data as $key => $val) {
+				$translation[$lang]['key'][] = '$' . $key . '$';
+				$translation[$lang]['val'][] = $val;
+			}
+		}
+		if(!isset($translation['English'])) {
+			$translation['English'] = [
+				'key' => [],
+				'val' => []
+			];
+		}
+		$this->signTranslation = $translation;
+	}
+	
+	public function getSignTranslation() {
+		return $this->signTranslation;
+	}	
+		
+	public function setGlobalCompassPosition($x, $z) {
+		$this->globalCompasPosition['x'] = $x;
+		$this->globalCompasPosition['z'] = $z;
+	}
+
+	public function getGlobalCompassPosition() {
+		return $this->globalCompasPosition;
+	}	
+
 }
