@@ -30,10 +30,14 @@ interface Info{
 	/**
 	 * Minecraft: PE protocol versions
 	 */
-	const CURRENT_PROTOCOL = 81;
-//	const NEWEST_PROTOCOL = 81;
+	const CURRENT_PROTOCOL = 82;
+//	const NEWEST_PROTOCOL = 82;
 //	const OLDEST_PROTOCOL = 39;
+<<<<<<< HEAD
 	const ACCEPTED_PROTOCOLS = [81];
+=======
+	const ACCEPTED_PROTOCOLS = [40, 41, 42, 43, 44, 45, 46, 60, 70, 81, 82];
+>>>>>>> refs/remotes/origin/master
 
 	/**
 	 * Minecraft: PE packets
