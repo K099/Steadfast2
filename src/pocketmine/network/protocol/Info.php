@@ -33,11 +33,7 @@ interface Info{
 	const CURRENT_PROTOCOL = 82;
 //	const NEWEST_PROTOCOL = 82;
 //	const OLDEST_PROTOCOL = 39;
-<<<<<<< HEAD
-	const ACCEPTED_PROTOCOLS = [81, 82];
-=======
-	const ACCEPTED_PROTOCOLS = [40, 41, 42, 43, 44, 45, 46, 60, 70, 81];
->>>>>>> parent of 5cf6205... 0.15+ only
+	const ACCEPTED_PROTOCOLS = [40, 41, 42, 43, 44, 45, 46, 60, 70, 81, 82];
 
 	/**
 	 * Minecraft: PE packets
